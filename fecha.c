@@ -1,31 +1,27 @@
 #include "fecha.h"
 
-int cantDiasMes(int mes, int anio);
-int cantDiasAnio(int anio);
+bool esBisiesto(int a);
+int cantDiasMes(int m, int a);
+int cantDiasAnio(int a);
 int diasTotales(const Fecha* fecha);
-bool esBisiesto(int anio);
 
-Fecha fechaCrear(int dia, int mes, int anio)
+bool esBisiesto(int a)
 {
-    Fecha f;
-    f.dia = dia;
-    f.mes = mes;
-    f.anio = anio;
-    return f;
+    return a % 4 == 0 && (a % 100 != 0 || a % 400 == 0);
 }
 
-int cantDiasMes(int mes, int anio)
+int cantDiasMes(int m, int a)
 {
-    if(mes == 2 && esBisiesto(anio))
+    if(m == 2 && esBisiesto(a))
         return 29;
 
     int cd[13] = {0, 31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31, 30};
-    return cd[mes];
+    return cd[m];
 }
 
-int cantDiasAnio(int anio)
+int cantDiasAnio(int a)
 {
-    return 365 + esBisiesto(anio);
+    return 365 + esBisiesto(a);
 }
 
 int diasTotales(const Fecha* fecha)
@@ -50,14 +46,15 @@ int diasTotales(const Fecha* fecha)
     return d;
 }
 
-bool esBisiesto(int anio)
-{
-    return anio % 4 == 0 && (anio % 100 != 0 || anio % 400 == 0);
-}
+// Primitivas
 
-void fechaMostrar(const Fecha* fecha)
+Fecha fechaCrear(int dia, int mes, int anio)
 {
-    printf("%d/%d/%d\n", fecha->dia, fecha->mes, fecha->anio);
+    Fecha f;
+    f.dia = dia;
+    f.mes = mes;
+    f.anio = anio;
+    return f;
 }
 
 Fecha fechaSumarDias(const Fecha* fecha, int dias)
@@ -101,7 +98,20 @@ int fechaDiferencia(const Fecha* fecha1, const Fecha* fecha2)
     return diasTotales(fecha1) - diasTotales(fecha2);
 }
 
-int diaDelAnio(const Fecha* fecha)
+Fecha fechaDiaDelAnioAFecha(int dia, int anio)
+{
+    if(dia < 1 || (!esBisiesto(anio) && dia > 365) || (esBisiesto && dia > 366))
+        return;
+    Fecha f = fechaCrear(1, 1, anio);
+    while(dia > 1)
+    {
+        f = fechaSumarDias(&f, 1);
+        dia--;
+    }
+    return f;
+}
+
+int fechaFechaADiaDelAnio(const Fecha* fecha)
 {
     Fecha f = fechaCrear(1, 1, fecha->anio);
     int d = 1;
@@ -113,20 +123,12 @@ int diaDelAnio(const Fecha* fecha)
     return d;
 }
 
-Fecha diaDelAnioAFecha(int diaDelAnio, int anio)
+int fechaDiaDeLaSemana(const Fecha* fecha)
 {
-    if(diaDelAnio < 1 || (!esBisiesto(anio) && diaDelAnio > 365) || (esBisiesto && diaDelAnio > 366))
-        return;
-    Fecha f = fechaCrear(1, 1, anio);
-    while(diaDelAnio > 1)
-    {
-        f = fechaSumarDias(&f, 1);
-        diaDelAnio--;
-    }
-    return f;
+    return fechaFechaADiaDelAnio(fecha) % 7;
 }
 
-int diaDeLaSemana(const Fecha* fecha)
+void fechaMostrar(const Fecha* fecha)
 {
-    return diaDelAnio(fecha) % 7;
+    printf("%d/%d/%d\n", fecha->dia, fecha->mes, fecha->anio);
 }

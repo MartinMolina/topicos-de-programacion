@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+// TDA
+
 typedef struct
 {
     int dia;
@@ -10,13 +12,19 @@ typedef struct
     int anio;
 } Fecha;
 
+// Primitivas
+
 Fecha fechaCrear(int dia, int mes, int anio);
-void fechaMostrar(const Fecha* fecha);
+
 Fecha fechaSumarDias(const Fecha* fecha, int dias);
 Fecha fechaRestarDias(const Fecha* fecha, int dias);
+
 int fechaDiferencia(const Fecha* fecha1, const Fecha* fecha2);
-int diaDelAnio(const Fecha* fecha);
-Fecha diaDelAnioAFecha(int diaDelAnio, int anio);
-int diaDeLaSemana(const Fecha* fecha);
+
+Fecha fechaDiaDelAnioAFecha(int diaDelAnio, int anio);
+int fechaFechaADiaDelAnio(const Fecha* fecha);
+int fechaDiaDeLaSemana(const Fecha* fecha);
+
+void fechaMostrar(const Fecha* fecha);
 
 #endif // FECHA_H_INCLUDED
