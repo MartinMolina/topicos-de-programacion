@@ -1,6 +1,7 @@
 #include "fecha.h"
 
 int cantDiasMes(int mes, int anio);
+int cantDiasAnio(int anio);
 int diasTotales(const Fecha* fecha);
 bool esBisiesto(int anio);
 
@@ -22,14 +23,29 @@ int cantDiasMes(int mes, int anio)
     return cd[mes];
 }
 
+int cantDiasAnio(int anio)
+{
+    return 365 + esBisiesto(anio);
+}
+
 int diasTotales(const Fecha* fecha)
 {
     Fecha f = *fecha;
     int d = 0;
-    while(f.anio > 1 || f.mes > 1 || f.dia > 1)
+    while(f.anio > 1)
     {
-        f = fechaRestarDias(&f, 1);
+        d += cantDiasAnio(f.anio);
+        f = fechaRestarDias(&f, cantDiasAnio(f.anio));
+    }
+    while(f.mes > 1)
+    {
+        d += cantDiasMes(f.mes, f.anio);
+        f = fechaRestarDias(&f, cantDiasMes(f.mes, f.anio));
+    }
+    while(f.dia > 1)
+    {
         d++;
+        f = fechaRestarDias(&f, 1);
     }
     return d;
 }
